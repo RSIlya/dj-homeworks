@@ -4,12 +4,13 @@ from django.shortcuts import render
 from .models import Student
 
 
+# class StudentsList(ListView):
+#     model = Student
+#     template_name = 'school/students_list.html'
+
+
 def students_list(request):
     template = 'school/students_list.html'
-    context = {}
-
-    # используйте этот параметр для упорядочивания результатов
-    # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet.order_by
-    ordering = 'group'
-
+    student_obj = Student.objects.order_by('group').prefetch_related('teachers')
+    context = {'object_list': student_obj}
     return render(request, template, context)
