@@ -143,4 +143,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-OPEN_ADS_LIMIT = 3
+OPEN_ADS_LIMIT = 10
