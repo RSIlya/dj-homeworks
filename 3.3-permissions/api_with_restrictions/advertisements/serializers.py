@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -39,7 +41,12 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
-
-        # TODO: добавьте требуемую валидацию
-
+        ads_status = data.get('status', "OPEN")
+        if ads_status in AdvertisementStatusChoices.OPEN:
+            open_user_ads = Advertisement.objects.filter(
+                creator=self.context["request"].user,
+                status=AdvertisementStatusChoices.OPEN
+            ).count()
+            if open_user_ads >= settings.OPEN_ADS_LIMIT:
+                raise serializers.ValidationError('Превышен лимит открытых объявлений')
         return data
