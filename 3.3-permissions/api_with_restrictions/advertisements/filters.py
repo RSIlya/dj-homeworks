@@ -13,4 +13,5 @@ class AdvertisementFilter(filters.FilterSet):
         fields = [
             'created_at',
             'creator',
+            'status',
         ]
